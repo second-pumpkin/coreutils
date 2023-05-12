@@ -11,7 +11,7 @@
 #include <err.h>
 
 int print_dir(char *pathname);
-int print_ent(char *dirname, int dirname_len, char *pathname, char **outbuf);
+int print_ent(char *pathname, char **outbuf);
 void register_opt(char opt);
 void register_opts(char *optstr);
 void print_mode(char *buf, int len, mode_t mode);
@@ -45,7 +45,6 @@ int layout_len = 0;
 int print_dir(char *pathname) {
 	DIR *dir;
 	struct dirent *ent;
-	int pathname_len = strlen(pathname);
 	char ***outbuf = NULL;
 	int ents = 0;
 	int column_maxlens[layout_len], column_len;
@@ -67,7 +66,7 @@ int print_dir(char *pathname) {
 		
 		if (!(outbuf[ents] = malloc(sizeof outbuf[ents] * layout_len)))
 			err(1, NULL);
-		print_ent(pathname, pathname_len, ent->d_name, outbuf[ents]);
+		print_ent(ent->d_name, outbuf[ents]);
 		ents++;
 	}
 
@@ -95,12 +94,10 @@ int print_dir(char *pathname) {
 
 /* TODO: come up with a better name and comment for this function */
 /* put an entry's text into the buffer passed in  */
-int print_ent(char *dirname, int dirname_len, char *pathname, char **outbuf) {
+int print_ent(char *pathname, char **outbuf) {
 	const int ELEM_SIZE = 64;
 	struct stat stats;
 	char *full_pathname;
-	
-	/* contruct the file's full pathname */
 
 	stat(pathname, &stats);
 

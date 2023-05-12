@@ -43,3 +43,11 @@ there are also two arguments that are equivalent to multiple arguments:
 - yes there will be a configuration file
 
 - 🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈
+
+---
+
+```
+mkdir ':3'
+touch ':3'/':)'
+lf ':3' -nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+```
