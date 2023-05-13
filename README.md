@@ -4,33 +4,31 @@ this was originally going to be a clone of several gnu coreutils, but I got dist
 
 ## lf
 
-lf is ls but bloated. you can specify the format that directory contents will be shown. it'll read the arguments from right to left, and display them in that order. the valid arguments and their corresponding file information are these:
+lf is ls but bloated. you can specify the format that directory contents will be shown. it'll read the specified options from left to right, and display information about the directory contents in that order. by using a number, you can change the previous option to display as a different variant. the valid options, their variants, and their corresponding file information are these:
 
-| switch | attribute |
+| switch | attribute | variant 1 | variant 2 |
 | ------ | --------- |
-| n | name |
-| m | mode |
-| u | owner* |
-| g | owning group* |
-| s | size in bytes |
-| i | inode number |
-| k | number of hard links |
-| d | residing device id (major/minor) |
-| r | device id (major/minor) |
-| z | block size |
-| b | number of blocks |
-| a | last accessed timestamp |
-| m | last modification timestamp |
-| c | creation timestamp |
+| n | name | | |
+| m | mode | octal mode | |
+| u | owner | owning uid | |
+| g | owning group | owning gid | |
+| s | size in bytes | | |
+| i | inode number | | |
+| k | number of hard links | | |
+| d | residing device id (major/minor) | residing device id (major) | residing device id (minor) |
+| r | device id (major/minor) | device id (major) | device id (minor) |
+| z | block size | | |
+| b | number of blocks | | |
+| a | last accessed timestamp | | |
+| m | last modification timestamp | | |
+| c | creation timestamp | | |
 
-<sup>* doesn't actually work yet</sup>
+there are also two options that are equivalent to multiple others:
 
-there are also two arguments that are equivalent to multiple arguments:
-
-| switch | arguments | purpose |
+| switch | equivalent options | purpose |
 | ------ | --------- | ------- |
 | l | -mkugsfn | emulates the real ls -l |
-| t | -dimkugrszbafcn | shows every single attribute for testing |
+| t | -dd1d2imm1kuu1gg1rr1r2szbafcn | shows every single attribute and variant the program is capable of showing |
 
 ---
 
