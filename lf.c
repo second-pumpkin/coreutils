@@ -13,11 +13,15 @@
 #include <pwd.h>
 #include <grp.h>
 
-int print_dir(char *pathname);
-int fill_ent(char *pathname, char **outbuf);
+void get_dir_info(char *pathname);
+void fill_ent(char *pathname, char **outbuf);
+void print_dir_columns(char ***outbuf, int ents);
+void print_dir(char ***outbuf, int ents);
 void register_opt(char opt);
 void set_opt_variant(char variant);
 void register_opts(char *optstr);
+void handle_opt_normal(char opt);
+void handle_opt_layout(char opt);
 void get_mode(char *buf, int len, mode_t mode);
 void get_user(char *buf, int len, uid_t uid);
 void get_group(char *buf, int len, gid_t gid);
@@ -55,20 +59,25 @@ enum fstats {
 int *layout = NULL;
 int layout_len = 0;
 
-/* print the contents of the directory */
-int print_dir(char *pathname) {
+/* struct for general program options */
+struct {
+	bool separate_ents;
+} program_args = {
+	true,
+};
+
+/* get information about the contents of the directory */
+void get_dir_info(char *pathname) {
 	DIR *dir;
 	struct dirent *ent;
 	char ***outbuf = NULL;
 	int ents = 0;
-	int column_maxlens[layout_len], column_len;
 
 	/* open the directory */
 	errno = 0;
 	if (!(dir = opendir(pathname))) {
-		if (errno == ENOTDIR)
-			/* TODO */
-			return 1;
+		/* if (errno == ENOTDIR)
+			TODO */
 		err(1, NULL);
 	}
 	
@@ -83,8 +92,17 @@ int print_dir(char *pathname) {
 		fill_ent(ent->d_name, outbuf[ents]);
 		ents++;
 	}
+	
+	if (program_args.separate_ents)
+		print_dir_columns(outbuf, ents);
+	else
+		print_dir(outbuf, ents);
+}
 
-	/* print the entries with nice spacing :) */
+/* print the directory entries with nice spacing :) */
+void print_dir_columns(char ***outbuf, int ents) {
+	int column_maxlens[layout_len], column_len;
+
 	/* first calculate the spacings */
 	for (int col = 0; col < layout_len; col++) {
 		column_maxlens[col] = 0;
@@ -98,16 +116,19 @@ int print_dir(char *pathname) {
 	/* now print stuff */
 	for (int row = 0; row < ents; row++) {
 		for (int col = 0; col < layout_len; col++)
-			printf("%-*s", column_maxlens[col] + 1, outbuf[row][col]);
+			printf("%-*s ", column_maxlens[col], outbuf[row][col]);
 		printf("\n");
 	}
+}
 
-	return 0;
-
+void print_dir(char ***outbuf, int ents) {
+	for (int row = 0; row < ents; row++)
+		for (int col = 0; col < layout_len; col++)
+			printf("%s ", outbuf[row][col]);
 }
 
 /* fill the array of strings passed in with strings containing file information determined by the layout */
-int fill_ent(char *pathname, char **outbuf) {
+void fill_ent(char *pathname, char **outbuf) {
 	const int ELEM_SIZE = 32;
 	struct stat stats;
 	char *full_pathname;
@@ -162,8 +183,6 @@ int fill_ent(char *pathname, char **outbuf) {
 						break;
 		}
 	}
-
-	return 0;
 }
 
 /* get an entry's mode in a good format */
@@ -251,7 +270,10 @@ void register_opt(char opt) {
 
 /* set the variant of the most recently registered layout option */
 void set_opt_variant(char variant) {
-		layout[layout_len - 1] |= variant << CHAR_BIT;
+	if (layout_len == 0)
+		errx(1, "can't set mode of previous argument to %c, as there is no previous argument.", variant);
+
+	layout[layout_len - 1] |= variant << CHAR_BIT;
 }
 
 /* register all the opt characters in optstr to the layout */
@@ -261,33 +283,66 @@ void register_opts(char *optstr) {
 	} while (*++optstr);
 }
 
+/* handle a layout mode opt */
+void handle_layout_opt(char opt) {
+	switch (opt) {
+		case 'l': register_opts("mkugsfn");
+			  return;
+		case 't': register_opts("dd1d2imm1kuu1gg1rr1r2szbafcn");
+			  return;
+		default:
+			  register_opt(opt);
+	}
+}
+
+/* handle a normal mode opt */
+void handle_normal_opt(char opt) {
+	switch (opt) {
+		case 'v':
+			printf("lf version (current version). written by lena.\n");
+			exit(0);
+		case 'h':
+			printf("dude it's like so complicated. check the manual please\n");
+			exit(0);
+		case 'l':
+			program_args.separate_ents = false;
+			break;
+		default:
+			errx(1, "invalid normal argument '%c'", opt);
+	}
+}
+
 /* main (I only added this comment to visually separate this function from the previous one) */
 int main(int argc, char** argv) {
 	char *pathname = ".";
 	int path_len;
 	char opt;
+	char mode = 'N'; /* normal mode */
 
 	/* parse arguments and set up the layout array */
 	opterr = 0;
 	while (1) {
-		opt = getopt(argc, argv, "ltdimkugrszbafcn0123456789");
+		opt = getopt(argc, argv, "NLabcdefghijklmnopqrstuvwxyz0123456789"); /* if anyone knows how to use getopt without the optstring please tell me how */
 		if (opt == -1)
 			break;
-		/* is the opt one of the normal ones? */
+		if (opt == '?')
+			errx(1, "invalid argument '%c'", optopt);
+
+		/* is opt a mode character? */
 		switch (opt) {
-			case '?':
-				fprintf(stderr, "invalid argument '%c'\n", optopt);
-				exit(1);
-			case 'l':
-				register_opts("mkugsfn");
-				continue;
-			case 't':
-				register_opts("dd1d2imm1kuu1gg1rr1r2szbafcn");
+			case 'N':
+			case 'L':
+				mode = opt;
 				continue;
 		}
-
-		/* opt is a layout switch */
-		register_opt(opt);
+		
+		/* opt is a mode specific switch */
+		switch (mode) {
+			case 'N': handle_normal_opt(opt);
+				  break;
+			case 'L': handle_layout_opt(opt);
+				  break;
+		}
 	}
 
 	/* default only show entry names */
@@ -301,6 +356,8 @@ int main(int argc, char** argv) {
 	}
 
 	/* print the contents of the directory */
-	return print_dir(pathname);
+	get_dir_info(pathname);
+
+	return 0;
 }
 
