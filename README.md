@@ -8,20 +8,20 @@ lf is ls but bloated. you can specify the format that directory contents will be
 
 | switch | attribute | variant 1 | variant 2 |
 | ------ | --------- |
-| n | name | | |
-| m | mode | octal mode | |
-| u | owner | owning uid | |
-| g | owning group | owning gid | |
-| s | size in bytes | | |
-| i | inode number | | |
-| k | number of hard links | | |
+| n | name | - | - |
+| m | mode | octal mode | - |
+| u | owner | owning uid | - |
+| g | owning group | owning gid | - |
+| s | size in bytes | - | - |
+| i | inode number | - | - |
+| k | number of hard links | - | - |
 | d | residing device id (major/minor) | residing device id (major) | residing device id (minor) |
 | r | device id (major/minor) | device id (major) | device id (minor) |
-| z | block size | | |
-| b | number of blocks | | |
-| a | last accessed timestamp | | |
-| m | last modification timestamp | | |
-| c | creation timestamp | | |
+| z | block size | - | - |
+| b | number of blocks | - | - |
+| a | last accessed timestamp | - | - |
+| m | last modification timestamp | - | - |
+| c | creation timestamp | - | - |
 
 there are also two options that are equivalent to multiple others:
 
