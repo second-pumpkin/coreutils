@@ -125,6 +125,7 @@ void print_dir(char ***outbuf, int ents) {
 	for (int row = 0; row < ents; row++)
 		for (int col = 0; col < layout_len; col++)
 			printf("%s ", outbuf[row][col]);
+	printf("\n");
 }
 
 /* fill the array of strings passed in with strings containing file information determined by the layout */
@@ -181,6 +182,8 @@ void fill_ent(char *pathname, char **outbuf) {
 						break;
 			case ST_CTIM:		get_timestamp(outbuf[i], ELEM_SIZE, stats.st_ctim);
 						break;
+			default:
+				errx(1, "invalid layout option '%c'", layout[i]);
 		}
 	}
 }
