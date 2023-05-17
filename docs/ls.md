@@ -1,4 +1,7 @@
-## ls
+## NAME
+	ls - A rewrite of GNU ls - list files in a directory
+
+## DESCRIPTION
 
 ls lists files in a directory. you can specify the format in which information about the specified directory's contents are shown. because there are so many possible options, there are two modes of interpretation:
 
@@ -43,7 +46,7 @@ there are also two options that are equivalent to multiple others:
 
 ---
 
-## examples
+## EXAMPLES
 
 this program is weird and complicated, so here are some examples of how to use it:
 
@@ -55,7 +58,7 @@ this program is weird and complicated, so here are some examples of how to use i
 
 ---
 
-## notes
+## NOTES
 
 - the code is bad
 

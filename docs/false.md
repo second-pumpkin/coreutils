@@ -1,5 +1,5 @@
-# false
-A less bloated version of GNU false - Do nothing, unsuccessfully
+## NAME
+	false - A less bloated version of GNU false - Do nothing, unsuccessfully
 
-## Options
-**false** [ignored command line arguments]
+## SYNOPSIS
+	**false** [ignored command line arguments]
