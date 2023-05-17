@@ -1,10 +1,6 @@
-this was originally going to be a clone of several gnu coreutils, but I got distracted and made ls fancy. so for now this is an ls project.
+## ls
 
----
-
-## lf
-
-lf is ls but bloated. you can specify the format in which information about the specified directory's contents are shown. because there are so many possible options, there are two modes of interpretation:
+ls lists files in a directory. you can specify the format in which information about the specified directory's contents are shown. because there are so many possible options, there are two modes of interpretation:
 
 | mode | switch |
 | ---- | ------ |
@@ -51,11 +47,11 @@ there are also two options that are equivalent to multiple others:
 
 this program is weird and complicated, so here are some examples of how to use it:
 
-- `lf -v`: show version information
-- `lf -Lnnni`: show the current directory's contents' names three times, then their inode number
-- `lf -NlLr /dev/`: show the contents of /dev/'s device numbers, all on one line
-- `lf -Lm1Nv /etc/': shows version information and terminates. if the Nv part wasn't included, it would print the contents of /etc/'s octal permission numbers.
-- `lf -Ldd1d2`: show the id of the device in which the contents of the current direcory reside within. first both the major and the minor id, then the major id, then the minor id.
+- `ls -v`: show version information
+- `ls -Lnnni`: show the current directory's contents' names three times, then their inode number
+- `ls -NlLr /dev/`: show the contents of /dev/'s device numbers, all on one line
+- `ls -Lm1Nv /etc/': shows version information and terminates. if the Nv part wasn't included, it would print the contents of /etc/'s octal permission numbers.
+- `ls -Ldd1d2`: show the id of the device in which the contents of the current direcory reside within. first both the major and the minor id, then the major id, then the minor id.
 
 ---
 
