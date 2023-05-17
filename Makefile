@@ -5,18 +5,18 @@ coreutils:
 	mkdir -p bin/
 	make $(PROGRAMS)
 install: 
-	install -c bin/* /usr/bin/
+	install -c $(PROGRAMS) /usr/bin/
 clean:
-	rm -r bin/
+	rm $(PROGRAMS)
 
 ls: src/ls.c
-	cc $(CFLAGS) src/ls.c -o bin/ls
+	cc $(CFLAGS) src/ls.c -o ls
 true: src/true.c
-	cc $(CFLAGS) src/true.c -o bin/true
+	cc $(CFLAGS) src/true.c -o true
 false: src/false.c
-	cc $(CFLAGS) src/false.c -o bin/false
+	cc $(CFLAGS) src/false.c -o false
 whoami: src/whoami.c
-	cc $(CFLAGS) src/whoami.c -o bin/whoami
+	cc $(CFLAGS) src/whoami.c -o whoami
 yes: src/yes.c
-	cc $(CFLAGS) src/yes.c -o bin/yes
+	cc $(CFLAGS) src/yes.c -o yes
 
